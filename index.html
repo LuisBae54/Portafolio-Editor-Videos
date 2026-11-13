@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>André — Editor de video</title>
+  <meta name="description" content="André, editor de video. Portafolio de reels.">
+  <meta name="theme-color" content="#FBFAF6">
+  <script>
+    (function () {
+      var h = document.documentElement;
+      h.classList.add('js');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) h.classList.add('reduce');
+      try {
+        var t = localStorage.getItem('pf-theme');
+        if (t === 'dark' || t === 'light') h.dataset.theme = t;
+        if (localStorage.getItem('pf-lang') === 'en') h.lang = 'en';
+      } catch (e) {}
+      if (h.dataset.theme === 'dark') {
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.content = '#0B0D1A';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <noscript><style>.preloader{display:none!important}</style></noscript>
+</head>
+<body data-ui="base">
+
+  <!-- Pantalla de carga: contador de timecode y cortina -->
+  <div class="preloader" aria-hidden="true">
+    <div class="preloader__half preloader__half--top"></div>
+    <div class="preloader__half preloader__half--bottom"></div>
+    <div class="preloader__center">
+      <span class="rec"></span>
+      <span class="preloader__tc">00:00:00:00</span>
+    </div>
+  </div>
+
+  <div class="cursor" aria-hidden="true"><span></span></div>
+
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#inicio" data-go="#inicio" id="navBrand">André</a>
+    <button class="nav__burger" id="navBurger" type="button" aria-expanded="false" aria-controls="navMenu" data-i18n-aria="nav.menu"><i></i><i></i></button>
+    <div class="nav__menu" id="navMenu">
+      <nav class="nav__links" aria-label="Principal">
+        <a class="nav__link" href="#reels" data-go="#reels" style="--i:0"><span data-i18n="nav.reels"></span></a>
+        <a class="nav__link" href="#proceso" data-go="#proceso" style="--i:1"><span data-i18n="nav.process"></span></a>
+        <a class="nav__link" href="#contacto" data-go="#contacto" style="--i:2"><span data-i18n="nav.contact"></span></a>
+      </nav>
+      <div class="nav__tools">
+        <button class="tool tool--lang" id="langBtn" type="button"><span data-l="es">ES</span><span data-l="en">EN</span></button>
+        <button class="tool" id="themeBtn" type="button" aria-pressed="false">
+          <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button class="tool" id="soundBtn" type="button" aria-pressed="true">
+          <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- INICIO -->
+    <section class="hero" id="inicio" data-clip>
+      <div class="hero__stage" aria-hidden="true">
+        <div class="hcard hcard--a" data-depth="0.5"><div class="hcard__inner"></div></div>
+        <div class="hcard hcard--b" data-depth="1"><div class="hcard__inner"></div></div>
+        <div class="hcard hcard--c" data-depth="0.7"><div class="hcard__inner"></div></div>
+      </div>
+
+      <div class="hero__inner">
+        <h1 class="hero__title" id="heroTitle" aria-label=""></h1>
+        <div class="hero__row">
+          <p class="hero__intro" id="heroIntro"></p>
+          <div class="hero__cta">
+            <a class="btn" href="#reels" data-go="#reels"><span class="btn__t" data-t="" data-i18n="hero.cta1"></span></a>
+            <a class="btn btn--ghost" id="heroWhats" href="#contacto" target="_blank" rel="noopener"><span class="btn__t" data-t="" data-i18n="hero.cta2"></span></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__hint" aria-hidden="true"><span data-i18n="hero.hint"></span><i></i></div>
+    </section>
+
+    <!-- REELS: scroll horizontal anclado -->
+    <section class="reels" id="reels" data-clip>
+      <div class="reels__track">
+        <div class="reels__intro">
+          <h2 class="title" data-i18n-lines="reels.title"></h2>
+          <p class="lead" id="reelsLead"></p>
+          <p class="reels__count" id="reelsCount"></p>
+        </div>
+        <div class="reels__end">
+          <h3 class="title title--m" data-i18n-lines="reels.end"></h3>
+          <a class="btn btn--ghost" id="endInsta" href="#contacto" target="_blank" rel="noopener"><span class="btn__t" data-t="" data-i18n="reels.insta"></span></a>
+        </div>
+      </div>
+      <div class="reels__progress" aria-hidden="true"><i></i></div>
+    </section>
+
+    <!-- PROCESO -->
+    <section class="process" id="proceso" data-clip>
+      <div class="process__left">
+        <h2 class="title" data-i18n-lines="process.title"></h2>
+        <p class="lead" id="processIntro"></p>
+        <p class="process__tools" id="processTools"></p>
+      </div>
+      <div class="process__right">
+        <div class="process__rail" aria-hidden="true"><i></i></div>
+        <ol class="steps" id="steps"></ol>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contact" id="contacto" data-clip>
+      <div class="contact__top">
+        <h2 class="title title--xl" id="contactTitle"></h2>
+        <a class="magnet" id="contactBtn" href="#" target="_blank" rel="noopener" data-cursor-hide>
+          <span class="magnet__in" data-i18n="contact.btn"></span>
+        </a>
+      </div>
+
+      <div class="contact__links">
+        <a class="ulink" id="contactMail" href="#"><span></span></a>
+        <ul class="socials" id="socials"></ul>
+      </div>
+
+      <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marqueeTrack"></div></div>
+
+      <footer class="foot">
+        <span id="footName"></span>
+        <a href="#inicio" data-go="#inicio" class="ulink ulink--sm"><span data-i18n="foot.top"></span></a>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Barra de tiempo fija: una línea de tiempo que sigue el scroll -->
+  <div class="timeline" id="timeline">
+    <div class="timeline__tc" id="tlTc">00:00:00:00</div>
+    <nav class="timeline__track" id="tlTrack" aria-label="Secciones">
+      <div class="timeline__clips" id="tlClips"></div>
+      <div class="timeline__head" id="tlHead" aria-hidden="true"></div>
+    </nav>
+  </div>
+
+  <!-- Reproductor -->
+  <div class="player" id="player" aria-hidden="true" role="dialog" aria-modal="true" data-i18n-aria="player.label">
+    <div class="player__backdrop" id="plBackdrop"></div>
+    <div class="player__frame" id="plFrame">
+      <div class="player__media" id="plMedia">
+        <video class="player__video" id="plVideo" playsinline preload="auto"></video>
+        <p class="player__msg" id="plMsg" hidden></p>
+      </div>
+      <div class="player__bar" id="plBar">
+        <button type="button" class="player__btn" id="plPlay"></button>
+        <div class="player__progress" id="plProgress" role="slider" aria-label="Progreso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><i></i></div>
+        <span class="player__time" id="plTime">0:00</span>
+        <button type="button" class="player__btn" id="plMute"></button>
+      </div>
+    </div>
+    <div class="player__info" id="plInfo"><h3 id="plTitle"></h3><p id="plMeta"></p></div>
+    <button type="button" class="player__close" id="plClose" data-i18n="player.close"></button>
+    <button type="button" class="player__nav player__nav--prev" id="plPrev" data-i18n-aria="player.prev">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button type="button" class="player__nav player__nav--next" id="plNext" data-i18n-aria="player.next">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/vendor/lenis.min.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
